@@ -1,37 +1,23 @@
-#!/bin/sh
-
-# A dwm_bar function that shows the current artist, track, duration, and status from Spotify using playerctl
-# Joe Standring <git@joestandring.com>
-# GNU GPLv3
-
-# Dependencies: spotify, playerctl
-
-# TODO: Find a method to get track position data and shuffle status (currently playerctl does not work for this)
+#!/bin/bash
+set -Eeu
 
 dwm_spotify () {
+    COLOR_VALUE="#E2F0CB"
     if ps -C spotify > /dev/null; then
         ARTIST=$(playerctl -p spotify metadata artist)
         TRACK=$(playerctl -p spotify metadata title)
         DURATION=$(playerctl -p spotify metadata mpris:length | sed 's/.\{6\}$//')
         STATUS=$(playerctl -p spotify status)
 
-        if [ "$IDENTIFIER" = "unicode" ]; then
-            if [ "$STATUS" = "Playing" ]; then
-                STATUS="▶"
-            else
-                STATUS="⏸"
-            fi
+        if [ "$STATUS" = "Playing" ]; then
+            STATUS="▶"
         else
-            if [ "$STATUS" = "Playing" ]; then
-                STATUS="PLA"
-            else
-                STATUS="PAU"
-            fi
+            STATUS="⏸"
         fi
-        printf "%s%s %s - %s " "$SEP1" "$STATUS" "$ARTIST" "$TRACK"
+        printf "${SEP1}"
+        [[ -n "${COLOR-}" ]] && printf "^c${COLOR_VALUE}^" || :
+        printf "%s %s - %s " "${STATUS}" "${ARTIST}" "${TRACK}"
         printf "%0d:%02d" $((DURATION%3600/60)) $((DURATION%60))
-        printf "%s" "$SEP2"
+        printf "${SEP2}"
     fi
 }
-
-dwm_spotify

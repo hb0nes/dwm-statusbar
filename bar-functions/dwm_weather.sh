@@ -17,5 +17,3 @@ dwm_weather() {
     fi
     printf "%s" "$SEP2"
 }
-
-dwm_weather

@@ -1,26 +1,25 @@
 #!/bin/bash
+set -Eeuo pipefail
+
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
 LOC=$(readlink -f "$0")
 DIR=$(dirname "$LOC")
 
-# Change the appearance of the module identifier. if this is set to "unicode", then symbols will be used as identifiers instead of text. E.g. [📪 0] instead of [MAIL 0].
-# Requires a font with adequate unicode character support
-export IDENTIFIER="unicode"
+# Variables for functions
+export FUNC_DIR=${DIR}/bar-functions
+export DATA_DIR=${DIR}/data
+export BAR_FUNCTIONS=( "dwm_spotify 5" "dwm_disk 30" "dwm_cpu 1" "dwm_memory 10" "dwm_battery 10" "dwm_wicd 5" "dwm_backlight 0.1" "dwm_pulse 0.1" "dwm_date 1" )
+SEP_COLOR="#42E9F5"
+export SEP1="^c${SEP_COLOR}^[^d^"
+export SEP2="^c${SEP_COLOR}^]^d^"
+export COLOR="true"
 
-# Change the charachter(s) used to seperate modules. If two are used, they will be placed at the start and end.
-export SEP1="["
-export SEP2="]"
+# Import the functions
+. <(cat "${FUNC_DIR}"/*)
 
-# Import the modules
-. "$DIR/bar-functions/dwm_spotify.sh"
-. "$DIR/bar-functions/dwm_resources.sh"
-. "$DIR/bar-functions/dwm_battery.sh"
-. "$DIR/bar-functions/dwm_backlight.sh"
-. "$DIR/bar-functions/dwm_pulse.sh"
-. "$DIR/bar-functions/dwm_wicd.sh"
-. "$DIR/bar-functions/dwm_date.sh"
+rm -rf "${DATA_DIR}"
+mkdir -p "${DATA_DIR}"
 
-while true; do
-    xsetroot -name "$(dwm_spotify)$(dwm_resources)$(dwm_backlight)$(dwm_pulse)$(dwm_wicd)$(dwm_battery)$(dwm_date)"
-    sleep 5
-done
+runStatusBarFunctions
+updateStatusBar

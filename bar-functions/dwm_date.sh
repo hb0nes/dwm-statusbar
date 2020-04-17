@@ -1,14 +1,9 @@
 #!/bin/sh
 
-# A dwm_bar function that shows the current date and time
-# Joe Standring <git@joestandring.com>
-# GNU GPLv3
-
-# Date is formatted like like this: "[Mon 01-01-00 00:00:00]"
 dwm_date () {
+    COLOR_VALUE="#FFDAC1"
     printf "%s" "$SEP1"
-    printf "📆 %s" "$(date "+%a %d-%m-%y %H:%M")"
+    [[ -n "${COLOR-}" ]] && printf "^c${COLOR_VALUE}^" || :
+    printf "%s" "$(date +"%a %d-%m %H:%M")"
     printf "%s" "$SEP2"
 }
-
-dwm_date
