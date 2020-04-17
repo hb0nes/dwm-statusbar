@@ -1,7 +1,7 @@
 #!/bin/bash
 
 dwm_pulse () {
-    COLOR_VALUE="#FFB7B2"
+    COLOR_VALUE="#afc7d0"
     VOL=$(pulsemixer --get-volume | awk '{printf "%s",$1}')
     MUTED=$(pulsemixer --get-mute)
     printf "%s" "$SEP1"
